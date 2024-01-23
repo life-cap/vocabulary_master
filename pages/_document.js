@@ -22,6 +22,12 @@ export default function Document() {
                               <Link href="/wordtest" className="block py-2 px-3 text-white">Wordtest</Link>
                           </li>
                           <li>
+                              <Link href="/wordscramble" className="block py-2 px-3 text-white">Word Scramble</Link>
+                          </li>
+                          <li>
+                              <Link href="/vocabulary" className="block py-2 px-3 text-white">Vocabulary List</Link>
+                          </li>
+                          <li>
                               <Link href="/login" className="block py-2 px-3 text-white">Login</Link>
                           </li>
                       </ul>

@@ -1,40 +1,41 @@
-import { Inter } from 'next/font/google'
-import Cookies from "js-cookie";
-import {FaTrash, FaSave, FaPlay} from "react-icons/fa";
-import {IoClose} from "react-icons/io5";
+import Cookies from 'js-cookie';
+import { Inter } from 'next/font/google';
+import { IoClose } from "react-icons/io5";
 import Flashcard from "@/components/flashcard";
-import Stopwatch from "@/components/stopwatch";
-import React, {useEffect, useState} from "react";
-import {AiOutlineLoading} from "react-icons/ai";
+import { AiOutlineLoading } from "react-icons/ai";
+import React, { useEffect, useState } from "react";
+import { FaTrash, FaArrowUp, FaArrowDown } from "react-icons/fa6";
 import { FaCheck, FaQuestion, FaPlus } from "react-icons/fa6";
 import { HiOutlineSave } from "react-icons/hi";
 import { PiExportBold } from "react-icons/pi";
-import Router from "next/router";
-const inter = Inter({ subsets: ['latin'] })
-function Wordtest() {
+import {FaSave, FaPlay} from "react-icons/fa";
+import Stopwatch from "@/components/stopwatch";
+const inter = Inter({ subsets: ['latin'] });
+
+function Wordscramble() {
     const [start, setStart] = useState(false)
-    const [number, setNumber] = useState(1)
+    const [number, setNumber] = useState(2)
     const [gamedata, setGamedata] =useState()
     const [gamenumber, setGamenumber] = useState()
-    const [side, setSide] = useState(false);
-    const [answernum, setAnswernum] = useState(0);
-    const [answer, setAnswer] = useState()
+    const [loading, setLoading] = useState(true)
     const [ImportVisibility, setImportVisibility] = useState(false)
     const [onimport, setImport] = useState();
+    const [side, setSide] = useState(false)
+    const [answernum, setAnswernum] = useState(0)
+    const [answer, setAnswer] = useState()
     const [correct, setCorrect] = useState()
-    const [loading, setLoading] = useState(true)
-    const [time, setTime] = useState(0)
     const [inputs, setInputs] = useState([{
         name : 1,
         word : "",
-        meaning : ""
     }, ]);
 
     useEffect(() => {
         const savedInputs = Cookies.get('inputs');
+
         if (savedInputs) {
-            let number = 0
+            // Parse the string back to a list
             const savedList = JSON.parse(savedInputs);
+            let number = 0
             const relist = savedList.map((i) => {
                 number += 1
                 return {
@@ -48,15 +49,6 @@ function Wordtest() {
         }
         setLoading(false)
     }, []);
-
-    function textPress(e) {
-        if (e.key === 'Enter' && answer) {
-            checkAnswer()
-        }
-    };
-    function changeAnswer(e) {
-        setAnswer(e.target.value)
-    }
     function getDatalength(data) {
         return data.length
     }
@@ -66,11 +58,9 @@ function Wordtest() {
     function offImportVisible() {
         setImportVisibility(false);
     }
+
     function OnImportChange(e) {
         setImport(e.target.value)
-    }
-    function removeInput(id) {
-        setInputs(inputs.filter(item => item.name !== id));
     }
     function onChange(e) {
         const data= inputs.map(i => {
@@ -105,66 +95,92 @@ function Wordtest() {
             ...inputs
         ])
     }
+
+    function removeInput(id) {
+        setInputs(inputs.filter(item => item.name !== id));
+    }
+
     function saveCookies() {
         const list = JSON.stringify(inputs);
         Cookies.set('inputs', list);
         alert("Saved!")
     }
 
+    const getShuffledArr = arr => {
+        const newArr = arr.slice()
+        for (let i = newArr.length - 1; i > 0; i--) {
+            const rand = Math.floor(Math.random() * (i + 1));
+            [newArr[i], newArr[rand]] = [newArr[rand], newArr[i]];
+        }
+        return newArr
+    };
+
     function startGame() {
-        const data = inputs.filter(item => item.word && item.meaning)
+        const data = inputs.filter(item => item.word)
+        const scrambleData = data.map((i) => {
+           return {
+               word : i.word,
+               shuffledword : getShuffledArr(i.word.split('')).join('')
+           }
+        })
         if (data.length === 0) {
             return 0;
         } else {
             setStart(true)
-            setGamedata(data)
+            setGamedata(scrambleData)
             setGamenumber(0);
-            setTime(0);
-            setAnswernum(0);
+            setSide(false)
+            setAnswernum(0)
             setAnswer("")
-            setSide(false);
         }
     }
 
-    function checkAnswer() {
-        let number = answernum
-        if (answer === gamedata[gamenumber].word) {
-            setAnswer("")
-            setSide(true)
-            setAnswernum(answernum + 1);
-            number += 1
-            setCorrect("Correct :)")
+    function getDatalength(data) {
+        return data.length
+    }
+    function onAnswerchange(e) {
+        setAnswer(e.target.value)
+    }
 
+    function nextWord() {
+        let number = answernum
+        setAnswer("")
+        if (answer.toLowerCase() === gamedata[gamenumber].word.toLowerCase()) {
+            number += 1
+            setAnswernum(answernum + 1)
+            setCorrect('Correct :)')
+            setSide(true);
         } else {
-            setAnswer("")
-            setSide(true)
-            setCorrect("Incorrect :(")
+            setCorrect('Incorrect :(')
+            setSide(true);
         }
         setTimeout(() => {
             setCorrect("")
             if (getDatalength(gamedata) === gamenumber + 1) {
                 setStart(false);
-                alert(`Great Job! Your overall score is ${number}/${getDatalength(gamedata)}.\nYou right ${number} questions,\nYou Wrong ${getDatalength(gamedata)- number} questions.\nYou finished the test in ${Math.floor(time / 60)} minute and ${time%60} second.`)
+                alert(`Great Job! Your overall score is ${number}/${getDatalength(gamedata)}.\nYou right ${number} questions,\nYou Wrong ${getDatalength(gamedata)- number} questions.`)
             } else {
                 setGamenumber(gamenumber + 1);
                 setSide(false);
+                setGamenumber(gamenumber+1)
             }
         }, 2000)
-
     }
 
-    function skipQuestion() {
-        setAnswer("")
-        setSide(true)
-        setCorrect("Ok... remember next time :)")
+    function skipAnswer() {
+        let number = answernum
+        setAnswer("");
+        setCorrect("Ok... remember next time :)");
+        setSide(true);
         setTimeout(() => {
             setCorrect("")
             if (getDatalength(gamedata) === gamenumber + 1) {
                 setStart(false);
-                alert(`Great Job! Your overall score is ${answernum}/${getDatalength(gamedata)}.\nYou right ${answernum} questions,\nYou Wrong ${getDatalength(gamedata)- answernum} questions.\nYou finished the test in ${Math.floor(time / 60)} minute and ${time%60} second.`)
+                alert(`Great Job! Your overall score is ${number}/${getDatalength(gamedata)}.\nYou right ${number} questions,\nYou Wrong ${getDatalength(gamedata)- number} questions.`)
             } else {
                 setGamenumber(gamenumber + 1);
                 setSide(false);
+                setGamenumber(gamenumber+1)
             }
         }, 2000)
     }
@@ -214,12 +230,21 @@ function Wordtest() {
         }
     }
 
+    function Answerpress(e) {
+        if (e.key === 'Enter' && answer) {
+            nextWord()
+        }
+    }
+
     return (
         <>
             { start === false ?
                 (<>
                     <div className={"flex flex-col gap-4 items-center mt-32 mb-10"}>
-                        <h1 className={"text-5xl font-bold"}>Word Test</h1>
+                        <div className={"flex flex-col items-center"}>
+                            <h1 className={"text-5xl font-bold"}>Word scramble</h1>
+                            <small>* Doesn't support meanings *</small>
+                        </div>
                         <div className={`${ImportVisibility ? "visible" : "invisible"} modal justify-center w-screen h-screen flex flex-col gap-2 p-20  bg-white text-black bg-opacity-50`}>
                             <h1 className={"text-3xl font-bold"}>Import</h1>
                             <textarea className={"opacity-100 p-2 rounded-md text-black "} onChange={OnImportChange} name ="import" value={onimport} placeholder={"Write word definition"} />
@@ -268,18 +293,31 @@ function Wordtest() {
                 :
                 (<>
                     <div className={"flex flex-col gap-3 p-6 items-center justify-center h-screen"}>
-                        <Stopwatch time = {time} setTime={setTime} />
-                        <h1 className={"text-2xl font-semi p-3 px-[85px] bg-green-500 text-white rounded-xl shadow-xl"}>{answernum}/{getDatalength(gamedata)}</h1>
-                        <div className={"flex flex-row items-center gap-3"}>
-                            <Flashcard number={gamenumber} className={"transition"} front={gamedata[gamenumber].meaning} back={gamedata[gamenumber].word} side={side}/>
+                        {/*<h1 className={"text-2xl font-semi p-3 px-[85px] bg-green-500 text-white rounded-xl shadow-xl"}></h1>*/}
+                        <div className={"p-10 rounded-2xl flex flex-col items-center bg-white border-2 shadow-md border-blue-500"}>
+                            <div className={"flex flex-row items-center text-8xl gap-3"}>
+                                {!side ?
+                                    gamedata[gamenumber].shuffledword.split('').map((i) => (
+                                        <>
+                                            <div className={"p-5 border-2 rounded-xl"}>
+                                                <p>{i.toUpperCase()}</p>
+                                            </div>
+                                        </>
+                                    )) :
+                                    gamedata[gamenumber].word
+                                }
+
+                            </div>
+                            <div className={"flex flex-col gap-3 items-center"}>
+                                <input className={"w-[500px] text-center text-3xl p-3 border-b-2 border-blue-500 disabled:cursor-not-allowed disabled:bg-white"} placeholder={"Word"} onKeyPress={Answerpress} onChange={onAnswerchange} disabled={correct} value={answer}/>
+                                <div className={"flex flex-row gap-3"}>
+                                    <button className={"disabled:cursor-not-allowed disabled:bg-gray-400 text-xl shadow-md rounded-xl bg-green-500 text-white px-4 p-3"} onClick={nextWord} disabled={correct || !answer}><FaCheck/></button>
+                                    <button className={"disabled:cursor-not-allowed disabled:bg-gray-400 text-xl shadow-md rounded-xl bg-green-500 text-white px-4 p-3"} onClick={() => skipAnswer()} disabled={correct}><FaQuestion /></button>
+                                    <button className={"flex-col items-center text-2xl shadow-md rounded-xl bg-red-500 text-white p-3"} onClick={() => setStart(false)}><IoClose /></button>
+                                </div>
+                            </div>
+                            <h1 className={"mt-5"}>{correct}</h1>
                         </div>
-                        <div className={"flex flex-row gap-3"}>
-                            <input className={"w-[500px] p-3 rounded-xl shadow-xl border-2 border-blue-500 disabled:cursor-not-allowed disabled:bg-white"} onKeyDown={textPress} name={"Word"} value={answer} onChange={changeAnswer} placeholder={"Word"} disabled={correct} />
-                            <button className={"disabled:cursor-not-allowed disabled:bg-gray-400 text-xl shadow-md rounded-xl bg-green-500 text-white px-4 p-3"} onClick={() => checkAnswer()} disabled={correct || !answer}><FaCheck/></button>
-                            <button className={"disabled:cursor-not-allowed disabled:bg-gray-400 text-xl shadow-md rounded-xl bg-green-500 text-white px-4 p-3"} onClick={() => skipQuestion()} disabled={correct}><FaQuestion /></button>
-                            <button className={"flex-col items-center text-2xl shadow-md rounded-xl bg-red-500 text-white p-3"} onClick={() => setStart(false)}><IoClose /></button>
-                        </div>
-                        <h1>{correct}</h1>
                     </div>
                 </>)
             }
@@ -287,4 +325,4 @@ function Wordtest() {
     );
 }
 
-export default Wordtest;
+export default  Wordscramble

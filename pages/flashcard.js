@@ -1,21 +1,16 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
-
-import Link from "next/link"
-import {useEffect, useState} from "react";
-import Flashcard from "@/components/flashcard";
-import { FaArrowDown } from "react-icons/fa6";
-import { FaArrowUp } from "react-icons/fa";
-import { IoClose } from "react-icons/io5";
-import { FaTrash } from "react-icons/fa";
-import { AiOutlineLoading } from "react-icons/ai";
-import React from 'react';
 import Cookies from 'js-cookie';
+import { Inter } from 'next/font/google';
+import { IoClose } from "react-icons/io5";
+import Flashcard from "@/components/flashcard";
+import { AiOutlineLoading } from "react-icons/ai";
+import React, { useEffect, useState } from "react";
+import { FaTrash, FaArrowUp, FaArrowDown } from "react-icons/fa6";
+import { FaCheck, FaQuestion, FaPlus } from "react-icons/fa6";
+import { HiOutlineSave } from "react-icons/hi";
+import { PiExportBold } from "react-icons/pi";
+import {FaSave, FaPlay} from "react-icons/fa";
+const inter = Inter({ subsets: ['latin'] });
 
-import {BookIcon, SearchIcon} from "@/components/icon";
-import {Card, CardContent} from "@/components/card";
 function card() {
     const [start, setStart] = useState(false)
     const [number, setNumber] = useState(2)
@@ -24,13 +19,13 @@ function card() {
     const [loading, setLoading] = useState(true)
     const [side, setSide] = useState(false);
     const [ImportVisibility, setImportVisibility] = useState(false)
-    const [ExportVisibility, setExportVisibility] = useState(false)
     const [onimport, setImport] = useState();
     const [inputs, setInputs] = useState([{
         name : 1,
         word : "",
         meaning : ""
     }, ]);
+
     useEffect(() => {
         const savedInputs = Cookies.get('inputs');
 
@@ -51,6 +46,32 @@ function card() {
         }
         setLoading(false)
     }, []);
+
+    function gameUp() {
+        setGamenumber(gamenumber + 1)
+        setSide(false)
+    }
+
+    function gameDown() {
+        setGamenumber(gamenumber - 1)
+        setSide(false)
+    }
+    function flashcardClick() {
+        setSide(!side);
+    }
+    function getDatalength(data) {
+        return data.length
+    }
+    function onImportVisible() {
+        setImportVisibility(true);
+    }
+    function offImportVisible() {
+        setImportVisibility(false);
+    }
+
+    function OnImportChange(e) {
+        setImport(e.target.value)
+    }
     function onChange(e) {
         const data= inputs.map(i => {
             if ( parseInt(e.target.name) === i.name ) {
@@ -84,13 +105,15 @@ function card() {
             ...inputs
         ])
     }
-    function saveCookies() {
-        const list = JSON.stringify(inputs);
-        Cookies.set('inputs', list);
-    }
 
     function removeInput(id) {
         setInputs(inputs.filter(item => item.name !== id));
+    }
+
+    function saveCookies() {
+        const list = JSON.stringify(inputs);
+        Cookies.set('inputs', list);
+        alert("Saved!")
     }
 
     function startGame() {
@@ -103,39 +126,6 @@ function card() {
             setGamenumber(0);
         }
     }
-
-    function gameUp() {
-        setGamenumber(gamenumber + 1)
-        setSide(false)
-    }
-
-    function gameDown() {
-        setGamenumber(gamenumber - 1)
-        setSide(false)
-    }
-    function flashcardClick() {
-        setSide(!side);
-    }
-    function getDatalength(data) {
-        return data.length
-    }
-    function onImportVisible() {
-        setImportVisibility(true);
-    }
-    function offImportVisible() {
-        setImportVisibility(false);
-    }
-
-    function onExportVisible() {
-        setExportVisibility(true);
-    }
-    function offExportVisible() {
-        setExportVisibility(false);
-    }
-
-    function OnImportChange(e) {
-        setImport(e.target.value)
-    }
     function Imported() {
         if (!onimport) {
             return;
@@ -143,27 +133,24 @@ function card() {
         const data = onimport.split('\n')
         let alldata = []
         let newNumber = number
+        let reNumber = 0
         for (let i = 0; i<=data.length-1; i++) {
             newNumber += 1
             const value = data[i].split(" ")
-            if (!value[0] || !value[1]) {
+            if (!value[0] || !value.slice(1)) {
                 return
             }
             alldata.unshift({
                 name : newNumber+1,
                 word : value[0],
-                meaning: value[1]
+                meaning: value.slice(1).join(' ')
             })
         }
-        let renumber = 0
-        const relist = [
-            ...alldata,
-            ...inputs
-        ].map((i) => {
-            renumber += 1
+        const relist = [...alldata, ...inputs].map((i) => {
+            reNumber += 1
             return {
                 ...i,
-                name: renumber,
+                name: reNumber,
             }
         })
         setInputs(relist)
@@ -179,9 +166,9 @@ function card() {
         })
         try {
             await navigator.clipboard.writeText(text);
-            alert('클립보드에 링크가 복사되었습니다.');
+            alert('Copied!');
         } catch (e) {
-            alert('복사에 실패하였습니다');
+            alert('Failed to Copy :(');
         }
     }
 
@@ -199,21 +186,12 @@ function card() {
                                     <button className={"p-3 bg-blue-500 text-white rounded-xl shadow-md"} onClick={() => offImportVisible()}>Close</button>
                                 </div>
                             </div>
-                            <div className={`${ExportVisibility ? "visible" : "invisible"} modal items-center justify-center w-screen h-screen flex flex-col gap-2 p-20 bg-white text-black bg-opacity-50`}>
-                                <div className={"p-10 bg-white shadow-md rounded-xl flex flex-col gap-4"}>
-                                    <h1 className={"text-3xl font-bold"}>Export</h1>
-                                    <div className={"flex flex-row gap-3"}>
-                                        <button className={"p-3 bg-blue-500 text-white rounded-xl shadow-md"} onClick={() => Exported()}>Copy</button>
-                                        <button className={"p-3 bg-blue-500 text-white rounded-xl shadow-md"} onClick={() => offExportVisible()}>Close</button>
-                                    </div>
-                                </div>
-                            </div>
                             <div className={"flex flex-row gap-3 p-3"}>
-                                <button className={"p-3 bg-blue-500 text-white rounded-xl shadow-md"} onClick={() => startGame()}>Start</button>
-                                <button className={"p-3 bg-blue-500 text-white rounded-xl shadow-md"} onClick={() => insertInput()}>Add word</button>
-                                <button className={"p-3 bg-blue-500 text-white rounded-xl shadow-md "} onClick={() => saveCookies()}>Save</button>
-                                <button className={"p-3 bg-blue-500 text-white rounded-xl shadow-md "} onClick={() => onImportVisible()}>Import</button>
-                                <button className={"p-3 bg-blue-500 text-white rounded-xl shadow-md"} onClick={() => onExportVisible()}>Export</button>
+                                <button className={"p-3 bg-blue-500 text-white text-2xl rounded-xl shadow-md font-bold"} onClick={() => startGame()}><FaPlay /></button>
+                                <button className={"p-3 bg-blue-500 text-white text-2xl rounded-xl shadow-md font-bold"} onClick={() => insertInput()}><FaPlus/></button>
+                                <button className={"p-3 bg-blue-500 text-white text-2xl rounded-xl shadow-md font-bold"} onClick={() => saveCookies()}><FaSave /></button>
+                                <button className={"p-3 bg-blue-500 text-white text-2xl rounded-xl shadow-md font-bold"} onClick={() => onImportVisible()}><HiOutlineSave /></button>
+                                <button className={"p-3 bg-blue-500 text-white text-2xl rounded-xl shadow-md font-bold"} onClick={() => Exported()}><PiExportBold /></button>
                             </div>
                             {!loading ?
                                 <>

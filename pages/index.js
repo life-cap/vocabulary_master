@@ -1,15 +1,11 @@
 import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import {useState} from "react";
+import Router from 'next/router';
+import {Card} from "@/components/card";
+import { Inter } from 'next/font/google';
+import {SearchIcon} from "@/components/icon";
 
 const inter = Inter({ subsets: ['latin'] })
-
-import Link from "next/link"
-import {useEffect, useState} from "react";
-import Flashcard from "@/components/flashcard";
-import {BookIcon, SearchIcon} from "@/components/icon";
-import {Card, CardContent} from "@/components/card";
-import Router from 'next/router';
-
 export default function Home() {
   const [search, setSearch] = useState()
   function searchChange(e) {

@@ -1,11 +1,10 @@
-import Router, { useRouter } from 'next/router'
-import {SearchIcon} from "@/components/icon";
-import {Card, CardContent} from "@/components/card";
-import React, {useEffect, useState} from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
+import {SearchIcon} from "@/components/icon";
+import Router, { useRouter } from 'next/router'
+import React, {useEffect, useState} from "react";
 import { HiOutlinePlus } from "react-icons/hi2";
 import {AiOutlineLoading} from "react-icons/ai";
-import Cookies from "js-cookie";
 function Word(props) {
     const Router = useRouter();
     const [search, setSearch] = useState()
@@ -28,23 +27,35 @@ function Word(props) {
         }
     }
 
+    function addClick(add) {
+        const inputs = Cookies.get('inputs');
+        if (inputs) {
+            let data = JSON.parse(inputs)
+            data = [
+                {
+                    name : data.length,
+                    word : word,
+                    meaning: add
+                },
+                ...JSON.parse(inputs)
+            ]
+            Cookies.set('inputs',JSON.stringify(data))
+        } else {
+            let data = [
+                {
+                    name : 1,
+                    word : word,
+                    meaning: add
+                },
+            ]
+            Cookies.set('inputs',JSON.stringify(data))
+        }
+        alert("Added to Vocab List!")
+    }
+
     useEffect(() => {
         setWordData(null)
     }, [Router.isReady, word]);
-
-    function addClick(add) {
-        const inputs = Cookies.get('inputs');
-        let data = JSON.parse(inputs)
-        data = [
-            {
-                name : data.length,
-                word : word,
-                meaning: add
-            },
-            ...JSON.parse(inputs)
-        ]
-        Cookies.set('inputs',JSON.stringify(data))
-    }
 
     useEffect(() => {
         if (Router.isReady) {
