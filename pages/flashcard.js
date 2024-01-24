@@ -11,7 +11,7 @@ import { PiExportBold } from "react-icons/pi";
 import {FaSave, FaPlay} from "react-icons/fa";
 const inter = Inter({ subsets: ['latin'] });
 
-function card() {
+function Card() {
     const [start, setStart] = useState(false)
     const [number, setNumber] = useState(2)
     const [gamedata, setGamedata] =useState()
@@ -197,9 +197,11 @@ function card() {
                                 <>
                                     {inputs.map((i) => {
                                         return (
+                                            // eslint-disable-next-line react/jsx-key
                                             <div className={"flex flex-row items-center gap-4"}>
                                                 <input
                                                     className={"p-2 shadow-md w-40% rounded-md"}
+                                                    id = {i.name}
                                                     name={i.name}
                                                     placeholder="word"
                                                     onChange={onChange}
@@ -207,6 +209,7 @@ function card() {
                                                 />
                                                 <input
                                                         className={"p-2 shadow-md w-40% rounded-md"}
+                                                        id = {i.name}
                                                         name={i.name}
                                                         placeholder="meaning"
                                                         onChange={onChange}
@@ -243,4 +246,4 @@ function card() {
     );
 }
 
-export default card;
+export default Card;

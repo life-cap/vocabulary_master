@@ -59,6 +59,7 @@ function Vocabulary() {
                     <Text>- {"{"}Word{"}"} : {"{"}Meaning{"}"}</Text>
                     {inputs.filter(item => item.word && item.meaning).map(items=> {
                         return (
+                            // eslint-disable-next-line react/jsx-key
                             <Text>- {items.word} : {items.meaning}</Text>
                         )
                     })}
@@ -216,6 +217,7 @@ function Vocabulary() {
                     <>
                         {inputs.map((i) => {
                             return (
+                                // eslint-disable-next-line react/jsx-key
                                 <div className={"flex flex-row items-center gap-4"}>
                                     <input
                                         className={"p-2 shadow-md w-40% rounded-md"}

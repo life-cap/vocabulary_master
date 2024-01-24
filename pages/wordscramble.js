@@ -24,6 +24,7 @@ function Wordscramble() {
     const [answernum, setAnswernum] = useState(0)
     const [answer, setAnswer] = useState()
     const [correct, setCorrect] = useState()
+    const [time, setTime] = useState(0)
     const [inputs, setInputs] = useState([{
         name : 1,
         word : "",
@@ -131,6 +132,7 @@ function Wordscramble() {
             setGamenumber(0);
             setSide(false)
             setAnswernum(0)
+            setTime(0)
             setAnswer("")
         }
     }
@@ -158,7 +160,7 @@ function Wordscramble() {
             setCorrect("")
             if (getDatalength(gamedata) === gamenumber + 1) {
                 setStart(false);
-                alert(`Great Job! Your overall score is ${number}/${getDatalength(gamedata)}.\nYou right ${number} questions,\nYou Wrong ${getDatalength(gamedata)- number} questions.`)
+                alert(`Great Job! Your overall score is ${number}/${getDatalength(gamedata)}.\nYou right ${number} questions,\nYou Wrong ${getDatalength(gamedata)- number} questions.\nYou finished the test in ${Math.floor(time / 60)} minute and ${time%60} second.`)
             } else {
                 setGamenumber(gamenumber + 1);
                 setSide(false);
@@ -176,7 +178,7 @@ function Wordscramble() {
             setCorrect("")
             if (getDatalength(gamedata) === gamenumber + 1) {
                 setStart(false);
-                alert(`Great Job! Your overall score is ${number}/${getDatalength(gamedata)}.\nYou right ${number} questions,\nYou Wrong ${getDatalength(gamedata)- number} questions.`)
+                alert(`Great Job! Your overall score is ${number}/${getDatalength(gamedata)}.\nYou right ${number} questions,\nYou Wrong ${getDatalength(gamedata)- number} questions.\nYou finished the test in ${Math.floor(time / 60)} minute and ${time%60} second.`)
             } else {
                 setGamenumber(gamenumber + 1);
                 setSide(false);
@@ -264,6 +266,8 @@ function Wordscramble() {
                             <>
                                 {inputs.map((i) => {
                                     return (
+
+                                        // eslint-disable-next-line react/jsx-key
                                         <div className={"flex flex-row items-center gap-4"}>
                                             <input
                                                 className={"p-2 shadow-md w-40% rounded-md"}
@@ -293,6 +297,7 @@ function Wordscramble() {
                 :
                 (<>
                     <div className={"flex flex-col gap-3 p-6 items-center justify-center h-screen"}>
+                        <Stopwatch time = {time} setTime={setTime} />
                         {/*<h1 className={"text-2xl font-semi p-3 px-[85px] bg-green-500 text-white rounded-xl shadow-xl"}></h1>*/}
                         <div className={"p-10 rounded-2xl flex flex-col items-center bg-white border-2 shadow-md border-blue-500"}>
                             <div className={"flex flex-row items-center text-8xl gap-3"}>

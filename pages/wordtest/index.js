@@ -11,7 +11,7 @@ import { HiOutlineSave } from "react-icons/hi";
 import { PiExportBold } from "react-icons/pi";
 import Router from "next/router";
 const inter = Inter({ subsets: ['latin'] })
-function Wordtest() {
+function Index() {
     const [start, setStart] = useState(false)
     const [number, setNumber] = useState(1)
     const [gamedata, setGamedata] =useState()
@@ -239,6 +239,7 @@ function Wordtest() {
                             <>
                                 {inputs.map((i) => {
                                     return (
+                                        // eslint-disable-next-line react/jsx-key
                                         <div className={"flex flex-row items-center gap-4"}>
                                             <input
                                                 className={"p-2 shadow-md w-40% rounded-md"}
@@ -287,4 +288,4 @@ function Wordtest() {
     );
 }
 
-export default Wordtest;
+export default Index;

@@ -28,6 +28,9 @@ export default function Document() {
                               <Link href="/vocabulary" className="block py-2 px-3 text-white">Vocabulary List</Link>
                           </li>
                           <li>
+                              <Link href="/translate" className="block py-2 px-3 text-white">Translation</Link>
+                          </li>
+                          <li>
                               <Link href="/login" className="block py-2 px-3 text-white">Login</Link>
                           </li>
                       </ul>
