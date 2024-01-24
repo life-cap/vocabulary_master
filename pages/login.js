@@ -8,6 +8,7 @@ export default function Login() {
                     <input className={"p-3 rounded-b-xl border-x-2 border-b-2"} placeholder={"Password"}/>
                 </div>
                 <button className={"p-3 px-16 rounded-xl shadow-md bg-blue-500 text-white"}>Login</button>
+                <span>* Not working *</span>
             </div>
         </>
     )
