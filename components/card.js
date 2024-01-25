@@ -5,10 +5,3 @@ export function Card({children}) {
         </div>
     )
 }
-export function CardContent({children}) {
-    return (
-        <div className={""}>
-            {children}
-        </div>
-    )
-}

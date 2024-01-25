@@ -12,7 +12,7 @@ import { PiExportBold } from "react-icons/pi";
 import Router from "next/router";
 import Searchbar from "@/components/search";
 const inter = Inter({ subsets: ['latin'] })
-function Index() {
+function Wordtest() {
     const [start, setStart] = useState(false)
     const [number, setNumber] = useState(1)
     const [gamedata, setGamedata] =useState()
@@ -292,4 +292,4 @@ function Index() {
     );
 }
 
-export default Index;
+export default Wordtest;
