@@ -58,7 +58,7 @@ const PapagoExample = () => {
                     </div>
                     <div className={"flex-col flex gap-3 items-center"}>
                         <h1 className={"text-black text-xl"}>{endlanguage === "en" ? "English" : "Korean"}</h1>
-                        <div className={"w-[400px] h-[300px] rounded-xl p-6 bg-white border-2"}>
+                        <div className={"w-[400px] h-[300px] rounded-xl p-6 bg-white border-2 overflow-y-scroll"}>
                             {translatedText ?
                                 <>
                                     <p>{translatedText}</p>
