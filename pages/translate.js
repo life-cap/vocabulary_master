@@ -46,19 +46,19 @@ const PapagoExample = () => {
                 </div>
             </div>
             <div className={"flex flex-col gap-6"}>
-                <div className={"flex-row flex gap-3 p-6 bg-blue-500 rounded-xl"}>
-                    <div className={"flex-col flex gap-3 items-center"}>
-                        <h1 className={"text-white text-xl font-bold"}>{startlanguage === "en" ? "English" : "Korean"}</h1>
+                <div className={"flex-row flex gap-3 p-6 border-2 rounded-xl"}>
+                    <div className={"flex-col flex gap-3 items-center rounded-xl"}>
+                        <h1 className={"text-xl text-black"}>{startlanguage === "en" ? "English" : "Korean"}</h1>
                         <textarea
                             value={textToTranslate}
-                            className={"rounded-xl p-6 w-[400px] h-[300px] resize-none"}
+                            className={"rounded-xl p-6 w-[400px] h-[300px] resize-none border-2"}
                             placeholder={"Write anything!"}
                             onChange={(e) => setTextToTranslate(e.target.value)}
                         />
                     </div>
                     <div className={"flex-col flex gap-3 items-center"}>
-                        <h1 className={"text-white text-xl font-bold"}>{endlanguage === "en" ? "English" : "Korean"}</h1>
-                        <div className={"w-[400px] h-[300px] rounded-xl p-6 bg-white"}>
+                        <h1 className={"text-black text-xl"}>{endlanguage === "en" ? "English" : "Korean"}</h1>
+                        <div className={"w-[400px] h-[300px] rounded-xl p-6 bg-white border-2"}>
                             {translatedText ?
                                 <>
                                     <p>{translatedText}</p>
