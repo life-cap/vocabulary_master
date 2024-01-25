@@ -10,6 +10,7 @@ import { FaCheck, FaQuestion, FaPlus } from "react-icons/fa6";
 import { HiOutlineSave } from "react-icons/hi";
 import { PiExportBold } from "react-icons/pi";
 import Router from "next/router";
+import Searchbar from "@/components/search";
 const inter = Inter({ subsets: ['latin'] })
 function Index() {
     const [start, setStart] = useState(false)
@@ -218,52 +219,55 @@ function Index() {
         <>
             { start === false ?
                 (<>
-                    <div className={"flex flex-col gap-4 items-center mt-32 mb-10"}>
-                        <h1 className={"text-5xl font-bold"}>Word Test</h1>
-                        <div className={`${ImportVisibility ? "visible" : "invisible"} modal justify-center w-screen h-screen flex flex-col gap-2 p-20  bg-white text-black bg-opacity-50`}>
-                            <h1 className={"text-3xl font-bold"}>Import</h1>
-                            <textarea className={"opacity-100 p-2 rounded-md text-black "} onChange={OnImportChange} name ="import" value={onimport} placeholder={"Write word definition"} />
-                            <div className={"flex flex-row gap-3"}>
-                                <button className={"p-3 bg-blue-500 text-white rounded-xl shadow-md"} onClick={() => Imported()}>Import</button>
-                                <button className={"p-3 bg-blue-500 text-white rounded-xl shadow-md"} onClick={() => offImportVisible()}>Close</button>
+                    <div className={"flex flex-col gap-4 mt-32 mb-10"}>
+                        <Searchbar/>
+                        <div className={"flex flex-col gap-4 items-center"}>
+                            <h1 className={"text-5xl font-bold"}>Word Test</h1>
+                            <div className={`${ImportVisibility ? "visible" : "invisible"} modal justify-center w-screen h-screen flex flex-col gap-2 p-20  bg-white text-black bg-opacity-50`}>
+                                <h1 className={"text-3xl font-bold"}>Import</h1>
+                                <textarea className={"opacity-100 p-2 rounded-md text-black "} onChange={OnImportChange} name ="import" value={onimport} placeholder={"Write word definition"} />
+                                <div className={"flex flex-row gap-3"}>
+                                    <button className={"p-3 bg-blue-500 text-white rounded-xl shadow-md"} onClick={() => Imported()}>Import</button>
+                                    <button className={"p-3 bg-blue-500 text-white rounded-xl shadow-md"} onClick={() => offImportVisible()}>Close</button>
+                                </div>
                             </div>
-                        </div>
-                        <div className={"flex flex-row gap-3 p-3"}>
-                            <button className={"p-3 bg-blue-500 text-white text-2xl rounded-xl shadow-md font-bold"} onClick={() => startGame()}><FaPlay /></button>
-                            <button className={"p-3 bg-blue-500 text-white text-2xl rounded-xl shadow-md font-bold"} onClick={() => insertInput()}><FaPlus/></button>
-                            <button className={"p-3 bg-blue-500 text-white text-2xl rounded-xl shadow-md font-bold"} onClick={() => saveCookies()}><FaSave /></button>
-                            <button className={"p-3 bg-blue-500 text-white text-2xl rounded-xl shadow-md font-bold"} onClick={() => onImportVisible()}><HiOutlineSave /></button>
-                            <button className={"p-3 bg-blue-500 text-white text-2xl rounded-xl shadow-md font-bold"} onClick={() => Exported()}><PiExportBold /></button>
-                        </div>
-                        {!loading ?
-                            <>
-                                {inputs.map((i) => {
-                                    return (
-                                        // eslint-disable-next-line react/jsx-key
-                                        <div className={"flex flex-row items-center gap-4"}>
-                                            <input
-                                                className={"p-2 shadow-md w-40% rounded-md"}
-                                                name={i.name}
-                                                placeholder="word"
-                                                onChange={onChange}
-                                                value={i.word}
-                                            />
-                                            <input
-                                                className={"p-2 shadow-md w-40% rounded-md"}
-                                                name={i.name}
-                                                placeholder="meaning"
-                                                onChange={onChange}
-                                                value={i.meaning}
-                                            />
-                                            <button onClick={() => removeInput(i.name)} className={"p-2.5 bg-red-500 rounded-xl shadow-md text-white text-xl"}><FaTrash/></button>
-                                        </div>
-                                    )
-                                })}
-                            </> :
-                            <div className={"animate-spin"}>
-                                <AiOutlineLoading />
+                            <div className={"flex flex-row gap-3 p-3"}>
+                                <button className={"p-3 bg-blue-500 text-white text-2xl rounded-xl shadow-md font-bold"} onClick={() => startGame()}><FaPlay /></button>
+                                <button className={"p-3 bg-blue-500 text-white text-2xl rounded-xl shadow-md font-bold"} onClick={() => insertInput()}><FaPlus/></button>
+                                <button className={"p-3 bg-blue-500 text-white text-2xl rounded-xl shadow-md font-bold"} onClick={() => saveCookies()}><FaSave /></button>
+                                <button className={"p-3 bg-blue-500 text-white text-2xl rounded-xl shadow-md font-bold"} onClick={() => onImportVisible()}><HiOutlineSave /></button>
+                                <button className={"p-3 bg-blue-500 text-white text-2xl rounded-xl shadow-md font-bold"} onClick={() => Exported()}><PiExportBold /></button>
                             </div>
-                        }
+                            {!loading ?
+                                <>
+                                    {inputs.map((i) => {
+                                        return (
+                                            // eslint-disable-next-line react/jsx-key
+                                            <div className={"flex flex-row items-center gap-4"}>
+                                                <input
+                                                    className={"p-2 border-2 w-40% rounded-md"}
+                                                    name={i.name}
+                                                    placeholder="word"
+                                                    onChange={onChange}
+                                                    value={i.word}
+                                                />
+                                                <input
+                                                    className={"p-2 border-2 w-40% rounded-md"}
+                                                    name={i.name}
+                                                    placeholder="meaning"
+                                                    onChange={onChange}
+                                                    value={i.meaning}
+                                                />
+                                                <button onClick={() => removeInput(i.name)} className={"p-2.5 bg-red-500 rounded-xl shadow-md text-white text-xl"}><FaTrash/></button>
+                                            </div>
+                                        )
+                                    })}
+                                </> :
+                                <div className={"animate-spin"}>
+                                    <AiOutlineLoading />
+                                </div>
+                            }
+                        </div>
                     </div>
                 </>)
                 :

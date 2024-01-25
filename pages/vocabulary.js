@@ -12,6 +12,7 @@ import {FaSave, FaPlay} from "react-icons/fa";
 const inter = Inter({ subsets: ['latin'] });
 import { PDFDownloadLink, PDFViewer, Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import { IoPrint } from "react-icons/io5";
+import Searchbar from "@/components/search";
 
 function MyDocument() {
     return null;
@@ -189,7 +190,9 @@ function Vocabulary() {
 
     return (
         <>
-            <div className={"flex flex-col gap-4 items-center mt-32 mb-10"}>
+            <div className={"flex flex-col gap-4 mt-32 mb-10"}>
+                <Searchbar/>
+                <div className={"flex flex-col gap-4 items-center"}>
                 <h1 className={"text-5xl font-bold"}>Vocabulary</h1>
                 <div className={`${ImportVisibility ? "visible" : "invisible"} modal justify-center w-screen h-screen flex flex-col gap-2 p-20  bg-white text-black bg-opacity-50`}>
                     <h1 className={"text-3xl font-bold"}>Import</h1>
@@ -220,14 +223,14 @@ function Vocabulary() {
                                 // eslint-disable-next-line react/jsx-key
                                 <div className={"flex flex-row items-center gap-4"}>
                                     <input
-                                        className={"p-2 shadow-md w-40% rounded-md"}
+                                        className={"p-2 w-40% rounded-md border-2"}
                                         name={i.name}
                                         placeholder="word"
                                         onChange={onChange}
                                         value={i.word}
                                     />
                                     <input
-                                        className={"p-2 shadow-md w-40% rounded-md"}
+                                        className={"p-2 w-40% rounded-md border-2"}
                                         name={i.name}
                                         placeholder="meaning"
                                         onChange={onChange}
@@ -242,6 +245,7 @@ function Vocabulary() {
                         <AiOutlineLoading />
                     </div>
                 }
+                </div>
             </div>
         </>
     );

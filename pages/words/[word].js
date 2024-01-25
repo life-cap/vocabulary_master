@@ -12,9 +12,19 @@ function Word(props) {
     const router = useRouter();
     const { word } = router.query;
     const [loading, setLoading] = useState(false)
+    const [translatedText, setTranslatedText] = useState('');
     const refreshData = () => router.replace(router.asPath);
     function searchChange(e) {
         setSearch(e.target.value)
+    }
+
+    function checkEng(str){
+        const regExp = /[a-zA-Z]/g;
+        if(regExp.test(str)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     function searchPush() {
@@ -62,6 +72,7 @@ function Word(props) {
             async function fetchData() {
                 try {
                     setLoading(false);
+                    setTranslatedText('')
 
                     if (word === "Jacob") {
                         setWordData([
@@ -136,7 +147,26 @@ function Word(props) {
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 } finally {
-                    setLoading(true);
+                    if (checkEng(word)) {
+                        try {
+                            const response = await fetch('/api/papago', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({text: word, start : 'en', end : 'ko'}),
+                            });
+                            if (response.ok) {
+                                const data = await response.json()
+                                setTranslatedText(data.message.result.translatedText);
+                            } else {
+                                console.error('Failed to translate text.');
+                            }
+                        } catch (error) {
+                            console.error('Error while fetching translation:', error);
+                        }
+                    }
+                    setLoading(true)
                 }
             }
 
@@ -150,7 +180,9 @@ function Word(props) {
                            placeholder="Search for words..." name={"search"} value={search} onKeyDown={searchPress} onChange={searchChange} type="search"/>
                     <button className={"text-blue-600 hover:border-0 rounded-xl border-black"} onClick={() => searchPush()}><SearchIcon className=""/></button>
                 </div>
-                <h1 className={"text-4xl font-bold"}>{word}</h1>
+                <div className={"flex flex-row gap-2 items-baseline"}>
+                    <h1 className={"text-4xl font-bold"}>{word}</h1><h1>{translatedText}</h1>
+                </div>
                 <div className={"flex flex-col gap-3"}>
                     {loading ?
                         <>
