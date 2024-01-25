@@ -22,7 +22,7 @@ export default function Home() {
     async function fetchData() {
       try {
         // Fetch news
-        const newsResponse = await axios.get("https://api.nytimes.com/svc/topstories/v2/home.json?api-key=PXxvslvDjGGIaxe0trnbrld30UKePbTM");
+        const newsResponse = await axios.get(`https://api.nytimes.com/svc/topstories/v2/home.json?api-key=${process.env.NEXT_PUBLIC_NYTIME}`);
         const newsData = newsResponse.data.results.map((item) => {
           if (item.multimedia[0]) {
             return {
