@@ -41,7 +41,7 @@ export default function Home() {
             };
           }
         });
-        setNews(newsData.slice(0, 10));
+        setNews(newsData.slice(0, 20));
         const quoteResponse = await axios.get("https://api.quotable.io/quotes/random?tags=famous-quotes");
         const quoteData = quoteResponse.data[0];
         setQuote([quoteData.author, quoteData.content]);
